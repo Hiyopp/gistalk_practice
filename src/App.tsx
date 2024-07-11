@@ -10,7 +10,7 @@ type dataType = {
 }
 
 function App() {
-  const [datas, setDatas] = useState<dataType[]>(null);
+  const [datas, setDatas] = useState<dataType[] | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -20,10 +20,11 @@ function App() {
     setDatas(null);
     // loading 상태를 true 로 바꿉니다.
     setLoading(true);
-    const response = await axios.get(
+    const response = axios.get(
       './data/mockData'
     );
-    setDsers(response.data); // 데이터는 response.data 안에 들어있습니다.
+    setDatas(response.data); // 데이터는 response.data 안에 들어있습니다.
+    console.log(response.data);
   } catch (e: any) {
     setError(e);
   }
@@ -34,13 +35,9 @@ function App() {
   if (!datas) return null;
 
   return (
-    <ul>
-      {datas.map(data => (
-        <li key=data.userId>
-          {data.title}; ({data.body};)
-        </li>
-      ))};
-    </ul>
+    <div>
+      {datas}
+    </div>
   );
 }
 
