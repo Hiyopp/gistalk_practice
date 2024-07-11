@@ -1,45 +1,46 @@
-import "./App.css";
+import {useState, useEffect} from "react";
+import styled from "styled-components";
+import axios from 'axios';
 
-import { useState } from "react";
-import { useTranslation } from "react-i18next";
-import styled, { CSSProperties } from "styled-components";
-
-import ReactLogo from "./assets/react.svg?react";
-
-const ReadTheDocs = styled.p<{
-  $color?: CSSProperties["color"];
-}>`
-  color: ${({ $color }) => $color ?? "red"};
-`;
+type dataType = {
+  "userId": number;
+  "id": number;
+  "title": string;
+  "body": string;
+}
 
 function App() {
-  const [count, setCount] = useState(0);
-  const { t } = useTranslation("main");
+  const [datas, setDatas] = useState<dataType[]>(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  try {
+    // 요청이 시작 할 때에는 error 와 users 를 초기화하고
+    setError(null);
+    setDatas(null);
+    // loading 상태를 true 로 바꿉니다.
+    setLoading(true);
+    const response = await axios.get(
+      './data/mockData'
+    );
+    setDsers(response.data); // 데이터는 response.data 안에 들어있습니다.
+  } catch (e: any) {
+    setError(e);
+  }
+  setLoading(false);
+
+  if (loading) return <div>로딩중..</div>;
+  if (error) return <div>에러가 발생했습니다</div>;
+  if (!datas) return null;
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank" rel="noreferrer">
-          <img src="/src/assets/react.svg" className="logo" alt="Vite logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <ReadTheDocs $color={"blue"}>
-        {t("title")}
-        <ReactLogo width={16} height={16} />
-      </ReadTheDocs>
-    </div>
+    <ul>
+      {datas.map(data => (
+        <li key=data.userId>
+          {data.title}; ({data.body};)
+        </li>
+      ))};
+    </ul>
   );
 }
 
