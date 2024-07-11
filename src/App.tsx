@@ -20,7 +20,7 @@ function App() {
     setDatas(null);
     // loading 상태를 true 로 바꿉니다.
     setLoading(true);
-    const response = axios.get(
+    const response = await axios.get(
       './data/mockData'
     );
     setDatas(response.data); // 데이터는 response.data 안에 들어있습니다.
