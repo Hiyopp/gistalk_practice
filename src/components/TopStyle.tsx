@@ -2,6 +2,7 @@ import { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import styled from "styled-components";
 
+import Logo from "../components/Logo";
 import Home from "../pages/Home";
 import LookPost from "../pages/LookPost";
 
@@ -28,11 +29,6 @@ const Top = styled.div`
   backdrop-filter: blur(5px);
 `;
 
-const Logo = styled.div`
-  margin-left: 10px;
-  font-size: 20px;
-`;
-
 function TopStyle() {
   const [distinguish, setDistinguish] = useState<string>();
 
@@ -55,7 +51,7 @@ function TopStyle() {
   return (
     <GlobalStyle>
       <Top>
-        <Logo>{distinguish}</Logo>
+        <Logo distinguish={distinguish} />
       </Top>
       <BrowserRouter>
         <Routes>
