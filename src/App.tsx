@@ -1,13 +1,13 @@
+import { lazy } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
-import Home from "./components/Home";
-
 const queryClient = new QueryClient();
+const TopStyle = lazy(() => import("./components/TopStyle"));
 
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <Home />
+      <TopStyle />
     </QueryClientProvider>
   );
 }

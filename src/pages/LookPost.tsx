@@ -1,6 +1,5 @@
-//import tw from "tailwind-styled-components";
-
 import axios from "axios";
+import { Dispatch, SetStateAction } from "react";
 import { useQuery } from "react-query";
 import styled from "styled-components";
 
@@ -11,34 +10,6 @@ const Load = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-`;
-
-const GlobalStyle = styled.div`
-  width: 100vw;
-  height: 100vh;
-
-  display: flex;
-
-  flex-direction: column;
-`;
-
-const Top = styled.div`
-  width: 100%;
-  padding-top: 20px;
-  padding-bottom: 20px;
-
-  position: fixed;
-
-  border-width: 0 0 1px 0;
-  border-style: solid;
-  border-color: black;
-
-  backdrop-filter: blur(5px);
-`;
-
-const Logo = styled.div`
-  margin-left: 10px;
-  font-size: 20px;
 `;
 
 const PostWrapper = styled.div`
@@ -63,6 +34,10 @@ const Post = styled.div`
     height: 200px;
   }
 
+  &:hover {
+    cursor: pointer;
+  }
+
   background: #f5f5f7;
   border: 1px solid grey;
 
@@ -70,20 +45,6 @@ const Post = styled.div`
 
   display: flex;
   flex-direction: column;
-`;
-
-const Title = styled.div`
-  width: 100%;
-  padding-top: 10px;
-  padding-bottom: 10px;
-  text-align: center;
-
-  border-width: 0 0 1px 0;
-  border-style: solid;
-  border-color: grey;
-
-  color: grey;
-  font-size: 30px;
 `;
 
 const Body = styled.div`
@@ -96,6 +57,11 @@ const Body = styled.div`
   color: grey;
 `;
 
+type setDistinguishType = {
+  setDistinguish: Dispatch<SetStateAction<string | undefined>>;
+  postId: number | undefined;
+};
+
 type Group = {
   userId: number;
   id: number;
@@ -103,32 +69,30 @@ type Group = {
   body: number;
 };
 
-function Home() {
+function LookPost({ setDistinguish, postId }: setDistinguishType) {
+  setDistinguish("Post Page");
+  window.scrollTo(0, 0);
+
   const { error, data, isLoading } = useQuery({
     queryKey: ["mockData"],
     queryFn: async () =>
       await axios
-        .get("https://jsonplaceholder.typicode.com/posts")
+        .get(`https://jsonplaceholder.typicode.com/posts/${postId}/comments`)
         .then(({ data }) => data)
         .catch((err) => console.log(err)),
   });
   if (isLoading) return <Load>Loading...</Load>;
   if (error) return "An error has occurred: " + error;
+
   return (
-    <GlobalStyle>
-      <Top>
-        <Logo>Post Page</Logo>
-      </Top>
-      <PostWrapper>
-        {data.map((data: Group) => (
-          <Post key={data.id}>
-            <Title>{data.title}</Title>
-            <Body>{data.body}</Body>
-          </Post>
-        ))}
-      </PostWrapper>
-    </GlobalStyle>
+    <PostWrapper>
+      {data.map((data: Group) => (
+        <Post key={data.id}>
+          <Body key={data.id + 100}>{data.body}</Body>
+        </Post>
+      ))}
+    </PostWrapper>
   );
 }
 
-export default Home;
+export default LookPost;
